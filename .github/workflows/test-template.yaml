@@ -1,0 +1,50 @@
+---
+name: "Template Test"
+on:
+  workflow_call:
+    inputs:
+      release-branch:
+        required: true
+        type: string
+      manual-approval-required:
+        required: true
+        type: boolean
+            
+concurrency:
+  group: ${{ github.workflow }}-${{ inputs.release-branch }}
+  cancel-in-progress: false
+
+jobs:
+  print-settings:
+    name: 'Print-settings'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Print inputs
+        run: |
+          echo "release branch is ${{ inputs.release-branch }} "
+          echo "manual-approval-required is ${{ inputs.manual-approval-required }}"
+
+  manual-approval:
+    name: 'Manual Approval'
+    if: ${{ inputs.manual-approval-required }} == true
+    needs: [print-settings]
+    runs-on: ubuntu-latest
+    steps:
+    - name: manual approve
+      run: |
+          echo "Manually approved Plan Triggered"
+
+  terraform-destroy:
+    name: 'Terraform Destroy'
+    needs: [print-settings, manual-approval]
+    if: |
+      always() && 
+      (needs.print-settings.result == 'success') &&
+      (needs.manual-approval.result == 'skipped' || needs.manual-approval.result == 'success')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+      with:
+        ref: ${{ inputs.release-branch }}    
+...
