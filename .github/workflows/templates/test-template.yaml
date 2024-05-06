@@ -11,8 +11,8 @@ on:
         type: boolean
             
 concurrency:
-group: ${{ github.workflow }}-${{ inputs.release-branch }}
-cancel-in-progress: false
+  group: ${{ github.workflow }}-${{ inputs.release-branch }}
+  cancel-in-progress: false
 
 jobs:
 print-settings:
