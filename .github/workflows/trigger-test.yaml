@@ -16,6 +16,8 @@ jobs:
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: Trigger Template File
         uses: ./.github/workflows/templates/test-template.yaml
         with:
@@ -27,6 +29,8 @@ jobs:
     if: github.event_name == 'workflow_dispatch'
     runs-on: ubuntu-latest
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: Trigger Template File
         uses: ./.github/workflows/templates/test-template.yaml
         with:
@@ -40,6 +44,8 @@ jobs:
     outputs:
       branches: ${{ steps.find_releases.outputs.branches }}
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: 'Find Releases'
         id: find_releases
         run: bash .github/scripts/search_for_releases.sh
@@ -56,6 +62,8 @@ jobs:
         branches: ${{ needs.schedule-trigger.outputs.branches }}
       fail-fast: false
     steps:
+      - name: checkout
+        uses: actions/checkout@v4
       - name: Trigger Template File
         uses: ./.github/workflows/templates/test-template.yaml
         with:
