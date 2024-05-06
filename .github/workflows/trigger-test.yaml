@@ -14,28 +14,18 @@ jobs:
   pr-trigger:
     name: 'PR Trigger'
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: Trigger Template File
-        uses: ./.github/workflows/templates/test-template.yaml
-        with:
-          release-branch: ${{ github.event.pull_request.head.ref }}
-          manual-approval-required: true
+    uses: ${{ github.repository }}/.github/workflows/templates/test-template.yaml
+    with:
+      release-branch: ${{ github.ref_name }}
+      manual-approval-required: true
 
   workflow-dispatch:
     name: 'Workflow dispatch'
     if: github.event_name == 'workflow_dispatch'
-    runs-on: ubuntu-latest
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: Trigger Template File
-        uses: ./.github/workflows/templates/test-template.yaml
-        with:
-          release-branch: ${{ github.ref_name }}
-          manual-approval-required: true
+    uses: ${{ github.repository }}/.github/workflows/templates/test-template.yaml
+    with:
+      release-branch: ${{ github.ref_name }}
+      manual-approval-required: true
 
   schedule-trigger:
     name: 'schedule trigger'
@@ -56,17 +46,9 @@ jobs:
   schedule-matrix:
     name: 'schedule trigger'
     needs: [schedule-trigger]
-    runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        branches: ${{ needs.schedule-trigger.outputs.branches }}
-      fail-fast: false
-    steps:
-      - name: checkout
-        uses: actions/checkout@v4
-      - name: Trigger Template File
-        uses: ./.github/workflows/templates/test-template.yaml
-        with:
-          release-branch: ${{ matrix.branches }}
-          manual-approval-required: false
+    if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
+    uses: ${{ github.repository }}/.github/workflows/templates/test-template.yaml
+    with:
+      release-branch: ${{ github.ref_name }}
+      manual-approval-required: true
 ...
