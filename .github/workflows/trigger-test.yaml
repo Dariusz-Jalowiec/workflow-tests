@@ -1,0 +1,64 @@
+---
+name: "Trigger Test"
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: '0 22 * * 1-5'
+  pull_request:
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+jobs:
+  pr-trigger:
+    name: 'PR Trigger'
+    if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Template File
+        uses: ./.github/workflows/templates/test-template.yaml
+        with:
+          release-branch: ${{ github.event.pull_request.head.ref }}
+          manual-approval-required: true
+
+  workflow-dispatch:
+    name: 'Workflow dispatch'
+    if: github.event_name == 'workflow_dispatch'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger Template File
+        uses: ./.github/workflows/templates/test-template.yaml
+        with:
+          release-branch: ${{ github.ref_name }}
+          manual-approval-required: true
+
+  schedule-trigger:
+    name: 'schedule trigger'
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    outputs:
+      branches: ${{ steps.find_releases.outputs.branches }}
+    steps:
+      - name: 'Find Releases'
+        id: find_releases
+        run: bash .github/scripts/search_for_releases.sh
+        env:
+          BEARER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+
+  schedule-matrix:
+    name: 'schedule trigger'
+    needs: [schedule-trigger]
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        branches: ${{ needs.schedule-trigger.outputs.branches }}
+      fail-fast: false
+    steps:
+      - name: Trigger Template File
+        uses: ./.github/workflows/templates/test-template.yaml
+        with:
+          release-branch: ${{ matrix.branches }}
+          manual-approval-required: false
+...
