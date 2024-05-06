@@ -14,7 +14,7 @@ jobs:
   pr-trigger:
     name: 'PR Trigger'
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
-    uses: ${{ github.repository }}/.github/workflows/test-template.yaml
+    uses: ./.github/workflows/test-template.yaml
     with:
       release-branch: ${{ github.ref_name }}
       manual-approval-required: true
@@ -22,7 +22,7 @@ jobs:
   workflow-dispatch:
     name: 'Workflow dispatch'
     if: github.event_name == 'workflow_dispatch'
-    uses: ${{ github.repository }}/.github/workflows/test-template.yaml
+    uses: ./.github/workflows/test-template.yaml
     with:
       release-branch: ${{ github.ref_name }}
       manual-approval-required: true
@@ -47,7 +47,7 @@ jobs:
     name: 'schedule trigger'
     needs: [schedule-trigger]
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
-    uses: ${{ github.repository }}/.github/workflows/test-template.yaml
+    uses: ./.github/workflows/test-template.yaml
     with:
       release-branch: ${{ github.ref_name }}
       manual-approval-required: true
