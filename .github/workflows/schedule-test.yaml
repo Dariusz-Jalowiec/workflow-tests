@@ -2,7 +2,7 @@
 name: "Schedule Test"
 on:
   schedule:
-    - cron: '0 15 27 * 1-5'
+    - cron: '30 15 * * 1-5'
 
 jobs:
   schedule-trigger:
