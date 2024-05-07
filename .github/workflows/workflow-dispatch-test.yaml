@@ -1,0 +1,22 @@
+---
+name: "Sitecore Release Workflow Dispatch Apply"
+on:
+  workflow_dispatch:
+
+jobs:
+  workflow-dispatch-test-one:
+    name: 'Workflow dispatch-test-one'
+    uses: ./.github/workflows/template-number-one.yaml
+    with:
+      release-branch: ${{ github.ref_name }}
+      manual-approval-required: true
+    secrets: inherit
+
+  workflow-dispatch-test-two:
+    name: 'Workflow dispatch-test-one'
+    uses: ./.github/workflows/template-number-two.yaml
+    with:
+      release-branch: ${{ github.ref_name }}
+      manual-approval-required: true
+    secrets: inherit
+...

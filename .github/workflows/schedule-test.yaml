@@ -1,0 +1,49 @@
+---
+name: "Sitecore Release Workflow Dispatch Apply"
+on:
+  schedule:
+    - cron: '0 15 30 * 1-5'
+
+jobs:
+  schedule-trigger:
+    name: 'Schedule trigger'
+    if: github.event_name == 'schedule'
+    runs-on: ubuntu-latest
+    outputs:
+      branches: ${{ steps.find_releases.outputs.branches }}
+    steps:
+      - name: checkout
+        uses: actions/checkout@v4
+      - name: 'Find Releases'
+        id: find_releases
+        run: bash .github/scripts/search_for_releases.sh
+        env:
+          BEARER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          REPOSITORY: ${{ github.repository }}
+
+  workflow-dispatch-test-one:
+    name: 'Workflow schedule-test-one'
+    needs: [schedule-trigger]
+    strategy:
+      matrix:
+        branches: ${{ needs.schedule-trigger.outputs.branches }}
+      fail-fast: false
+    uses: ./.github/workflows/template-number-one.yaml
+    with:
+      release-branch: ${{ matrix.branches }}
+      manual-approval-required: true
+    secrets: inherit
+
+  workflow-dispatch-test-two:
+    name: 'Workflow schedule-test-one'
+    needs: [schedule-trigger]
+    strategy:
+      matrix:
+        branches: ${{ needs.schedule-trigger.outputs.branches }}
+      fail-fast: false
+    uses: ./.github/workflows/template-number-two.yaml
+    with:
+      release-branch: ${{ matrix.branches }}
+      manual-approval-required: true
+    secrets: inherit
+...
