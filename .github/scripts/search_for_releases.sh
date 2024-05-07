@@ -24,4 +24,6 @@ fi
 
 release_branch=$(echo "$pr_list" | jq -r '.headRefName' | paste -sd "," - | sed 's/^/[/; s/$/]/')
 
-echo "branches=$release_branches" >> $GITHUB_OUTPUT
+echo "release_branch is ${release_branch}"
+
+echo "branches=$release_branch" >> $GITHUB_OUTPUT
