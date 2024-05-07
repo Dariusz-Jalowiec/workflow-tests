@@ -13,7 +13,9 @@ if [[ -z ${REPOSITORY} ]]; then
     exit 1
 fi
 
-pr_list=$(gh pr list --state open --repo "Dariusz-Jalowiec/${REPOSITORY}" --json headRefName --jq '.[] | select(.headRefName | startswith("release"))')
+echo "REPOSITORY is ${REPOSITORY}"
+
+pr_list=$(gh pr list --state open --repo "${REPOSITORY}" --json headRefName --jq '.[] | select(.headRefName | startswith("release"))')
 
 if [ $? -ne 0 ]; then
     echo "Error: Failed to retrieve pull requests. Error message: $pr_list"
