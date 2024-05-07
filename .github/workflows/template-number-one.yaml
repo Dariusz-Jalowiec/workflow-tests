@@ -16,7 +16,7 @@ concurrency:
 
 jobs:
   print-settings:
-    name: 'Print-settings'
+    name: 'Print-settings template number one'
     runs-on: ubuntu-latest
     steps:
       - name: Print inputs
@@ -25,7 +25,7 @@ jobs:
           echo "manual-approval-env is ${{ inputs.manual-approval-env }}"
 
   manual-approval:
-    name: 'Manual Approval'
+    name: 'Manual Approval template number one'
     needs: [print-settings]
     environment:
       name: ${{ inputs.manual-approval-env }}
@@ -36,7 +36,7 @@ jobs:
           echo "Manually approved Plan Triggered"
 
   test-job:
-    name: 'Terraform Destroy'
+    name: 'Terraform Destroy template number one'
     needs: [print-settings, manual-approval]
     runs-on: ubuntu-latest
     steps:
