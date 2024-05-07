@@ -28,7 +28,7 @@ jobs:
       manual-approval-required: true
 
   schedule-trigger:
-    name: 'schedule trigger'
+    name: 'Schedule trigger'
     if: github.event_name == 'schedule'
     runs-on: ubuntu-latest
     outputs:
@@ -44,7 +44,7 @@ jobs:
           REPOSITORY: ${{ github.repository }}
 
   schedule-matrix:
-    name: 'schedule trigger'
+    name: 'Schedule Matrix'
     needs: [schedule-trigger]
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
     strategy:
