@@ -1,5 +1,5 @@
 ---
-name: "Template Test"
+name: "Template Test one"
 on:
   workflow_call:
     inputs:
@@ -11,7 +11,7 @@ on:
         type: boolean
             
 concurrency:
-  group: ${{ github.workflow }}-${{ inputs.release-branch }}
+  group: ${{ github.workflow }}-one-${{ inputs.release-branch }}
   cancel-in-progress: false
 
 jobs:
@@ -34,7 +34,7 @@ jobs:
       run: |
           echo "Manually approved Plan Triggered"
 
-  terraform-destroy:
+  test-job:
     name: 'Terraform Destroy'
     needs: [print-settings, manual-approval]
     if: |
