@@ -18,7 +18,7 @@ jobs:
         id: find_releases
         run: bash .github/scripts/search_for_releases.sh
         env:
-          BEARER_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           REPOSITORY: ${{ github.repository }}
 
   workflow-dispatch-test-one:

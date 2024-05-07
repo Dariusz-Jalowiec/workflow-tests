@@ -3,7 +3,7 @@
 ### Script: search_for_releases.sh
 ### Purpose: search github for open Release Prs save them into output variable
 
-if [[ -z ${BEARER_TOKEN} ]]; then
+if [[ -z ${GH_TOKEN} ]]; then
     echo "ERROR: BEARER_TOKEN is not specified."
     exit 1
 fi
