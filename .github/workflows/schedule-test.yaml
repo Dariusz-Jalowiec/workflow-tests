@@ -2,7 +2,7 @@
 name: "Schedule Test"
 on:
   schedule:
-  - cron: '55 15 * * 1-5'
+  - cron: '10 16 * * 1-5'
 
 jobs:
   schedule-trigger:
@@ -31,7 +31,7 @@ jobs:
     uses: ./.github/workflows/template-number-one.yaml
     with:
       release-branch: ${{ matrix.branches }}
-      manual-approval-required: true
+      manual-approval-env: "test"
     secrets: inherit
 
   workflow-dispatch-test-two:
@@ -44,6 +44,6 @@ jobs:
     uses: ./.github/workflows/template-number-two.yaml
     with:
       release-branch: ${{ matrix.branches }}
-      manual-approval-required: true
+      manual-approval-env: "test"
     secrets: inherit
 ...
