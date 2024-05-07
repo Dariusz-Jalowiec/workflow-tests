@@ -22,7 +22,7 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-release_branches=$(echo "$pr_list" | jq -s '{"releases": [.[] | {branch: .headRefName}]}')
+release_branches=$(echo "$pr_list" | jq -c -s '{"releases": [.[] | {branch: .headRefName}]}' | tr -d ' ')
 
 echo "release_branches is ${release_branches}"
 
