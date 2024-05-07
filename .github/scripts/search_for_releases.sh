@@ -22,6 +22,6 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
-release_branches=$(echo "$pr_list" | jq -r '.[].headRefName' | jq -sR 'split("\n")[:-1] | map(split("\n")) | flatten | map(select(. != ""))')
+release_branch=$(echo "$pr_list" | jq -r '.headRefName' | paste -sd "," - | sed 's/^/[/; s/$/]/')
 
 echo "branches=$release_branches" >> $GITHUB_OUTPUT
