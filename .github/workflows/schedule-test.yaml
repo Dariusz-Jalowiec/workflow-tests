@@ -2,7 +2,7 @@
 name: "Schedule Test"
 on:
   schedule:
-  - cron: '10 17 * * 1-5'
+  - cron: '05 18 * * 1-5'
 
 jobs:
   schedule-trigger:
@@ -25,8 +25,7 @@ jobs:
     name: 'Workflow schedule-test-one'
     needs: [schedule-trigger]
     strategy:
-      matrix:
-        branches: ${{ needs.schedule-trigger.outputs.branches }}
+      matrix: ${{ fromJson(needs.schedule-trigger.outputs.branches) }}
       fail-fast: false
     uses: ./.github/workflows/template-number-one.yaml
     with:
@@ -38,8 +37,7 @@ jobs:
     name: 'Workflow schedule-test-one'
     needs: [schedule-trigger]
     strategy:
-      matrix:
-        branches: ${{ needs.schedule-trigger.outputs.branches }}
+      matrix: ${{ fromJson(needs.schedule-trigger.outputs.branches) }}
       fail-fast: false
     uses: ./.github/workflows/template-number-two.yaml
     with:
