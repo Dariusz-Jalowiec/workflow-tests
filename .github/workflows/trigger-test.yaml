@@ -16,7 +16,7 @@ jobs:
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
     uses: ./.github/workflows/test-template.yaml
     with:
-      release-branch: ${{ github.ref_name }}
+      release-branch: ${{ github.event.pull_request.head.ref }}
       manual-approval-required: true
 
   workflow-dispatch:
@@ -47,8 +47,12 @@ jobs:
     name: 'schedule trigger'
     needs: [schedule-trigger]
     if: github.event_name == 'pull_request' && startsWith(github.event.pull_request.head.ref, 'release')
+    strategy:
+      matrix:
+        branches: ${{ needs.schedule-trigger.outputs.branches }}
+      fail-fast: false
     uses: ./.github/workflows/test-template.yaml
     with:
-      release-branch: ${{ github.ref_name }}
+      release-branch: ${{ matrix.branches }}
       manual-approval-required: true
 ...
